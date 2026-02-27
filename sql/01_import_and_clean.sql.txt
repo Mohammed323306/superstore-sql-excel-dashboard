@@ -1,0 +1,44 @@
+-- =============================================
+-- 01_import_and_clean.sql
+-- Superstore Sales Analysis Project
+-- Purpose: Create cleaned base table
+-- =============================================
+
+-- Drop table if it already exists
+
+DROP TABLE IF EXISTS orders_clean;
+
+-- Create cleaned table from raw import
+
+CREATE TABLE orders_clean AS
+SELECT
+    CAST("Row ID" AS INTEGER)              AS row_id,
+    "Order ID"                             AS order_id,
+
+    -- Convert Order Date (to YYYY//MM/DD)
+
+    date(substr("Order Date", 7, 4) || '-' ||
+         substr("Order Date", 4, 2) || '-' ||
+         substr("Order Date", 1, 2))       AS order_date,
+
+    -- Convert Ship Date
+
+    date(substr("Ship Date", 7, 4) || '-' ||
+         substr("Ship Date", 4, 2) || '-' ||
+         substr("Ship Date", 1, 2))        AS ship_date,
+
+    "Ship Mode"                            AS ship_mode,
+    "Customer ID"                          AS customer_id,
+    "Customer Name"                        AS customer_name,
+    "Segment"                              AS segment,
+    "Country"                              AS country,
+    "City"                                 AS city,
+    "State"                                AS state,
+    CAST("Postal Code" AS TEXT)            AS postal_code,
+    "Region"                               AS region,
+    "Product ID"                           AS product_id,
+    "Category"                             AS category,
+    "Sub-Category"                         AS sub_category,
+    "Product Name"                         AS product_name,
+    CAST("Sales" AS REAL)                  AS sales
+FROM raw_orders;

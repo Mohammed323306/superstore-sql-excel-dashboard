@@ -1,0 +1,32 @@
+-- =============================================
+-- 02_views.sql
+-- Purpose: Create analytical view with derived columns
+-- =============================================
+
+DROP VIEW IF EXISTS v_orders;
+
+CREATE VIEW v_orders AS
+SELECT
+    *,
+    
+    -- Shipping duration in days
+
+    CAST(julianday(ship_date) - julianday(order_date) AS INTEGER) 
+        AS ship_days,
+
+    -- Year-Month for trend analysis
+
+    strftime('%Y-%m', order_date) 
+        AS order_year_month,
+
+    -- Year for slicers / filtering
+
+    strftime('%Y', order_date) 
+        AS order_year,
+
+    -- Quarter calculation
+
+    ((CAST(strftime('%m', order_date) AS INTEGER) - 1) / 3) + 1 
+        AS order_quarter
+
+FROM orders_clean;

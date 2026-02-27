@@ -1,0 +1,77 @@
+-- =============================================
+-- 03_analysis_queries.sql
+-- Purpose: Business KPI & Performance Analysis
+-- =============================================
+
+-- =============================================
+-- KPI SUMMARY
+-- =============================================
+
+SELECT
+    COUNT(DISTINCT order_id)      AS total_orders,
+    COUNT(DISTINCT customer_id)   AS total_customers,
+    ROUND(SUM(sales), 2)          AS total_sales,
+    ROUND(AVG(ship_days), 2)      AS avg_ship_days
+FROM v_orders;
+
+
+-- =============================================
+-- YEARLY & QUARTERLY SALES TREND
+-- =============================================
+
+SELECT
+    order_year,
+    order_quarter,
+    ROUND(SUM(sales), 2) AS total_sales
+FROM v_orders
+GROUP BY order_year, order_quarter
+ORDER BY order_year, order_quarter;
+
+
+-- =============================================
+-- SALES BY REGION
+-- =============================================
+
+SELECT
+    region,
+    ROUND(SUM(sales), 2) AS total_sales
+FROM v_orders
+GROUP BY region
+ORDER BY total_sales DESC;
+
+
+-- =============================================
+-- SALES BY CATEGORY
+-- =============================================
+
+SELECT
+    category,
+    ROUND(SUM(sales), 2) AS total_sales
+FROM v_orders
+GROUP BY category
+ORDER BY total_sales DESC;
+
+
+-- =============================================
+-- TOP 10 PRODUCTS
+-- =============================================
+
+SELECT
+    product_name,
+    ROUND(SUM(sales), 2) AS total_sales
+FROM v_orders
+GROUP BY product_name
+ORDER BY total_sales DESC
+LIMIT 10;
+
+
+-- =============================================
+-- SHIPPING MODE PERFORMANCE
+-- =============================================
+
+SELECT
+    ship_mode,
+    ROUND(AVG(ship_days), 2) AS avg_ship_days
+FROM v_orders
+GROUP BY ship_mode
+ORDER BY avg_ship_days DESC;
